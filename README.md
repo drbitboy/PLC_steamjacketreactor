@@ -1,6 +1,6 @@
 # Steam Jacket Reactor modeled as Integrating FOPDT system
 
-See https://www.plctalk.net/threads/pid-tuning-for-high-order-lag-system.145422/
+See [this thread](https://www.plctalk.net/threads/pid-tuning-for-high-order-lag-system.145422/)
 
 Reaction not modeled (yet)
 
