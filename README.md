@@ -14,4 +14,4 @@ Initial modeling:
 
 * Match of temperature of ~64.8 when CV turned off:
 
-  * ![](https://github.com/drbitboy/PLC_steamjacketreactor/raw/master/zzImages/steamjacketreactor.png )
+  * ![](https://github.com/drbitboy/PLC_steamjacketreactor/raw/master/zzImages/steamjacketreactor_detail.png )
