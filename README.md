@@ -1,4 +1,4 @@
-# Steam Jacket Reactor modeling as Integrating FOPDT system
+# Steam Jacket Reactor modeled as Integrating FOPDT system
 
 See https://www.plctalk.net/threads/pid-tuning-for-high-order-lag-system.145422/
 
