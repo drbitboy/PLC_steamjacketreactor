@@ -4,8 +4,6 @@ See [this thread](https://www.plctalk.net/threads/pid-tuning-for-high-order-lag-
 
 Reaction not modeled (yet)
 
-PID control not modeled (yet)
-
 Initial modeling:
 
 * Overall match to Post #1:
