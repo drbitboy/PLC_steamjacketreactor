@@ -3,7 +3,7 @@ import PIL.Image
 import pandas as pd
 
 ### Read PNG image, convert to numpy array; add 1 to remove 0s
-arr=numpy.array(PIL.Image.open('zzImages/53C-73C_0450s-1650c.png'),dtype=numpy.float64)+1.0
+arr=numpy.array(PIL.Image.open('zzData/53C-73C_0450s-1650c.png'),dtype=numpy.float64)+1.0
 arr[:,:,1] /= (arr[:,:,0]+arr[:,:,2])  ### divide green channel by red+blue sum
 arr[:,:,0] = arr[:,:,1].min()          ### Zero out red channel
 arr[:,:,2] = arr[:,:,0]                ### Zero out blue channel
@@ -16,7 +16,7 @@ iw=numpy.where(arr>4)                  ### Pixel where scaled green/(red+blue) r
 
 arrout=numpy.array(arr,dtype=numpy.uint8)
 arrout[iw]=255
-PIL.Image.fromarray(arrout).save('zzImages/green.png')
+PIL.Image.fromarray(arrout).save('zzData/green.png')
 
 a=list(zip(iw[1],arr.shape[0]-iw[0]))  ### (column,offset from top,) pairs of green pixels
 a.sort()                               ### sort by column

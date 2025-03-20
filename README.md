@@ -8,8 +8,8 @@ Initial modeling:
 
 * Overall match to Post #1:
 
-  * ![](https://github.com/drbitboy/PLC_steamjacketreactor/raw/master/zzImages/steamjacketreactor.png)
+  * ![](https://github.com/drbitboy/PLC_steamjacketreactor/raw/master/zzData/steamjacketreactor.png)
 
 * Match of temperature of ~64.8 when CV turned off:
 
-  * ![](https://github.com/drbitboy/PLC_steamjacketreactor/raw/master/zzImages/steamjacketreactor_detail.png )
+  * ![](https://github.com/drbitboy/PLC_steamjacketreactor/raw/master/zzData/steamjacketreactor_detail.png )
