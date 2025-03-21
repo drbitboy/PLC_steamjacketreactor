@@ -41,21 +41,30 @@ heat loss to the ambient environment is small or insiginificant.
 
 
   ########################################################################
-  def plot_model(self):
+  def plot_model(self,plot_test=False):
 
     try: import matplotlib.pyplot as plt
     except: return
-    cvcount = len(self.sumCVs)
+
     fig,(axpv,axcv,) = plt.subplots(2,sharex=True)
+
+    cvcount = len(self.sumCVs)
     axpv.plot(self.Ts[-cvcount:],self.sumCVs, linestyle='dotted', label='sumCVShifted')
     axpv.plot(self.Ts[:cvcount],self.sumCVs, label='sumCV')
     axpv.plot(self.Ts,self.PVs, label='PV')
     axpv.plot(self.Ts[:cvcount],self.SPs, linestyle='dotted', label='SP')
-    axpv.legend(loc='lower right')
     axpv.set_ylabel('Temperature, degC')
     axpv.set_title('https://www.plctalk.net/threads/pid-tuning-for-high-order-lag-system.145422/')
 
     axcv.plot(self.Ts[:len(self.CVs)],self.CVs, label='CV, %')
+
+    if plot_test:
+      import pandas as pd
+      test_data=pd.read_csv('zzData/steamjacketreactor_green.csv')
+      axpv.plot(test_data.minutes,test_data.degC, linestyle='dotted', label='Raw PV data')
+      axcv.plot(test_data.minutes,test_data['CV%'], linestyle='dotted', label='Raw CV data')
+
+    axpv.legend(loc='lower right')
     axcv.legend(loc='upper right')
     axcv.set_ylabel('CV')
     axcv.set_xlabel('time, minutes')
@@ -64,6 +73,7 @@ heat loss to the ambient environment is small or insiginificant.
 
 
 ########################################################################
+### Obsolete manually estimated model parameters, from trend image
 TESTDATA = dict(deadcount=148    ### deadtime / deltat
                ,dCVdt=5.8*39.0/102.0
                ,k=5.8*39.0/(102.0*0.73961)
@@ -71,6 +81,28 @@ TESTDATA = dict(deadcount=148    ### deadtime / deltat
                ,deltat=1.0/60.0  
                ,PV0=54.7
                ,sumCV0=54.7
+               )
+########################################################################
+### Linear model (Temp=m*time+b) of raw data from 11.5 to ~15 minutes
+mCV,bCV=2.48768,28.702091
+dCVdt=mCV
+tTOP = 15.0
+PVTOP = (mCV * tTOP) + bCV   ### Temperature of that model at 15 minutes
+tCV100 = 7.6891891           ### Minutes just before CV goes to 100%
+deadcount = 148              ### Deadtime
+PV0 = 54.937984496124        ### Starting temperature, steady state
+deltat = 1.0 / 60.0          ### Minutes per sample (=1s)
+### Predict what sumCV will be at 15 minutes
+sumCVTOP = PV0 + (dCVdt * (tTOP - (tCV100+(deadcount*deltat))))
+TESTDATA = dict(deadcount=deadcount    ### deadtime / deltat
+               ,dCVdt=dCVdt
+                ### Calculate k so slope will match linear model
+                ### dPV(t)/dt = k (sumCV(t-deadtime) - PV(t))
+               ,k=dCVdt/(sumCVTOP-PVTOP)
+               ,T0=tCV100-deltat
+               ,deltat=deltat
+               ,PV0=PV0
+               ,sumCV0=PV0
                )
 def init_model():
   modeldict = dict()
@@ -121,9 +153,9 @@ def test_model():
   model = init_model()
 
   for i in range(int(round(((20.0-model.T0)/model.deltat) - model.deadcount))):
-    model.implicit_euler(i<440 and 100.0 or 0.0)
+    model.implicit_euler(i and i<443 and 100.0 or 0.0)
 
-  model.plot_model()
+  model.plot_model(plot_test=True)
 
 
 ########################################################################
