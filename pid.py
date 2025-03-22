@@ -74,11 +74,21 @@ Initialize PID class
     Derr = Perr - self.last_Perr_pct     ### delDelE=delE(n) - delE(n-1)
 
     ### - Apply PID equation, clamp result, percent units
-    self.CV_pct = self.CV_pct_clamp(self.CV_pct              ### CV(n-1)
-                                   +(self.Kp * Perr)                # +P
-                                   +(self.Ki * Ierr * self.deltaT)  # +I
-                                   +(self.Kd * Derr / self.deltaT)  # +D
-                                   )
+    if self.Ki!=0.0:
+      ### - Incremental ("Velocity") form plus clamping is one way
+      ###   to implement anti-windup reset
+      self.CV_pct = self.CV_pct_clamp(self.CV_pct            ### CV(n-1)
+                                     +(self.Kp * Perr)              # +P
+                                     +(self.Ki * Ierr * self.deltaT)# +I
+                                     +(self.Kd * Derr / self.deltaT)# +D
+                                     )
+    else:
+      ### If Ki is 0, no need for anti-windup reset, calculate P-term as
+      ### normal and let clamping handle saturation issues
+      self.CV_pct = self.CV_pct_clamp(self.Bias_pct              # +Bias
+                                     +(self.Kp * Ierr)              # +P
+                                     +(self.Kd * Derr / self.deltaT)# +D
+                                     )
 
     ### - Save error terms for next update
     self.last_Perr_pct = Perr        ### Will be next update's delE(n-1)
