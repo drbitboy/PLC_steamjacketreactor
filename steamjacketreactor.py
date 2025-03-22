@@ -41,7 +41,7 @@ heat loss to the ambient environment is small or insiginificant.
 
 
   ########################################################################
-  def plot_model(self,plot_test=False):
+  def plot_model(self,plot_test=False,cvtitle=False):
 
     try: import matplotlib.pyplot as plt
     except: return
@@ -57,6 +57,7 @@ heat loss to the ambient environment is small or insiginificant.
     axpv.set_title('https://www.plctalk.net/threads/pid-tuning-for-high-order-lag-system.145422/')
 
     axcv.plot(self.Ts[:len(self.CVs)],self.CVs, label='CV, %')
+    if cvtitle: axcv.set_title(cvtitle)
 
     if plot_test:
       import pandas as pd
@@ -144,7 +145,7 @@ def pid_control_model(SPbump=10.3,**kwargs):
       iPV += 1
     modelpid.set_SP(SPnew)
 
-  model.plot_model()
+  model.plot_model(cvtitle=str(modelpid))
 
 
 ########################################################################
